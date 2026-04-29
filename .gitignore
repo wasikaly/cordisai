@@ -1,0 +1,116 @@
+# ── Datasets (public, downloaded separately) ─────────────────────────────────
+CAMUS_public/
+EchoNet-Dynamic/
+
+# ── Model checkpoints (released separately via GitHub Releases / S3) ─────────
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+
+# ── Generated outputs / runtime data ─────────────────────────────────────────
+uploads/
+reports/
+*.pdf
+!website/**/*.pdf
+
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ── Virtual environments ─────────────────────────────────────────────────────
+venv/
+env/
+.venv/
+.env/
+ENV/
+env.bak/
+venv.bak/
+
+# ── Testing / coverage ───────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+.cache
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# ── Jupyter ──────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── IDE / editor ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Frontend (Node) ──────────────────────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/coverage/
+frontend/*.log
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ── Secrets / credentials ────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+credentials*.json
+secrets*.json
+
+# ── DICOM / medical data (PHI risk) ──────────────────────────────────────────
+*.dcm
+*.nii
+*.nii.gz
+*.avi
+*.mp4
+!website/mvp.MOV
+
+# ── Logs / temp ──────────────────────────────────────────────────────────────
+*.log
+logs/
+tmp/
+temp/
+
+# ── Docker ───────────────────────────────────────────────────────────────────
+.dockerignore.local
+
+# ── Misc ─────────────────────────────────────────────────────────────────────
+.mypy_cache/
+.ruff_cache/
+.claude/

@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: heartai-ingress
+  namespace: heartai
+  labels:
+    app.kubernetes.io/name: heartai
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "500m"    # allow large DICOM uploads
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"  # long pipeline runs
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: heartai.example.com   # replace with your domain
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: heartai-api
+                port:
+                  name: http
+  # Uncomment to enable TLS:
+  # tls:
+  #   - hosts:
+  #       - heartai.example.com
+  #     secretName: heartai-tls

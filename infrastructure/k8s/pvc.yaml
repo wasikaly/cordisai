@@ -1,0 +1,33 @@
+---
+# Persistent volume for model checkpoints (read-only at runtime)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: heartai-checkpoints-pvc
+  namespace: heartai
+  labels:
+    app.kubernetes.io/name: heartai
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: standard
+
+---
+# Persistent volume for generated reports and uploads
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: heartai-data-pvc
+  namespace: heartai
+  labels:
+    app.kubernetes.io/name: heartai
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: standard

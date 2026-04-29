@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heartai-api
+  namespace: heartai
+  labels:
+    app.kubernetes.io/name: heartai
+    app.kubernetes.io/component: api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: heartai-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: heartai-api
+        app.kubernetes.io/name: heartai
+        app.kubernetes.io/component: api
+    spec:
+      # ---------------------------------------------------------------------------
+      # To use GPU nodes, add a nodeSelector or toleration, e.g.:
+      #   nodeSelector:
+      #     accelerator: nvidia-tesla-t4
+      #   tolerations:
+      #     - key: nvidia.com/gpu
+      #       operator: Exists
+      #       effect: NoSchedule
+      # ---------------------------------------------------------------------------
+      containers:
+        - name: heartai-api
+          image: heartai:latest        # replace with your registry/image:tag
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: heartai-config
+          env:
+            # Secrets (API keys, DB credentials) should come from a Secret object:
+            # - name: SECRET_KEY
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: heartai-secrets
+            #       key: secret_key
+            - name: NUM_WORKERS
+              value: "0"   # required on Windows; keep 0 in container too for safety
+          resources:
+            requests:
+              cpu: "1"
+              memory: "2Gi"
+            limits:
+              cpu: "4"
+              memory: "8Gi"
+              # Uncomment for GPU nodes:
+              # nvidia.com/gpu: "1"
+          volumeMounts:
+            - name: checkpoints
+              mountPath: /data/checkpoints
+              readOnly: true
+            - name: data
+              mountPath: /data/reports
+              subPath: reports
+            - name: data
+              mountPath: /app/uploads
+              subPath: uploads
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+      volumes:
+        - name: checkpoints
+          persistentVolumeClaim:
+            claimName: heartai-checkpoints-pvc
+            readOnly: true
+        - name: data
+          persistentVolumeClaim:
+            claimName: heartai-data-pvc
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000

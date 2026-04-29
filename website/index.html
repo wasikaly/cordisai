@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CordisAI — AI-Powered Echocardiography Analysis</title>
+  <meta name="description" content="CordisAI automates echocardiography analysis with AI. 25+ cardiac measurements, 7+ disease detections, clinical recommendations." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; color-scheme: dark; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: #060608;
+      color: #c8ccd4;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    img, video { max-width: 100%; display: block; }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #060608; }
+    ::-webkit-scrollbar-thumb { background: #1e1e2a; border-radius: 3px; }
+
+    /* ===== UTILITY ===== */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .container-lg { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 120px 0; position: relative; }
+    .section-sm { padding: 80px 0; position: relative; }
+    .text-center { text-align: center; }
+
+    /* ===== TYPOGRAPHY ===== */
+    .heading-xl {
+      font-family: 'Space Grotesk', 'Inter', sans-serif;
+      font-size: clamp(42px, 6vw, 80px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+    }
+    .heading-lg {
+      font-family: 'Space Grotesk', 'Inter', sans-serif;
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+    }
+    .heading-md {
+      font-family: 'Space Grotesk', 'Inter', sans-serif;
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-weight: 600;
+      line-height: 1.3;
+      color: #ffffff;
+    }
+    .text-lg { font-size: 18px; line-height: 1.7; color: #8b8fa3; }
+    .text-md { font-size: 15px; line-height: 1.6; color: #8b8fa3; }
+    .text-sm { font-size: 13px; line-height: 1.5; color: #5a5e70; }
+    .text-white { color: #ffffff; }
+    .text-red { color: #ef4444; }
+    .text-muted { color: #5a5e70; }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #ef4444 0%, #f97316 60%, #ef4444 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #ef4444;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .subtitle {
+      font-size: 18px;
+      line-height: 1.7;
+      color: #6b6f82;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .section-header { margin-bottom: 80px; }
+    .section-header .heading-lg { margin-bottom: 20px; }
+
+    /* ===== LOGO ===== */
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .logo-white { color: #ffffff; }
+    .logo-red { color: #ef4444; }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 24px;
+      transition: all 0.4s ease;
+    }
+    .navbar.scrolled {
+      background: rgba(6, 6, 8, 0.85);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .navbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: #6b6f82;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #ffffff; }
+    .nav-cta {
+      background: #ef4444;
+      color: #fff !important;
+      padding: 10px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+    .nav-cta:hover { background: #dc2626; box-shadow: 0 8px 30px rgba(239,68,68,0.3); }
+
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: #ffffff;
+      cursor: pointer;
+      padding: 8px;
+    }
+    .mobile-toggle svg { width: 24px; height: 24px; }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 72px;
+      left: 0;
+      right: 0;
+      background: rgba(6,6,8,0.95);
+      backdrop-filter: blur(24px);
+      padding: 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .mobile-menu.open { display: flex; flex-direction: column; gap: 16px; }
+    .mobile-menu a {
+      font-size: 16px;
+      color: #8b8fa3;
+      padding: 8px 0;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .mobile-toggle { display: block; }
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 72px;
+      position: relative;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 900px;
+      background: radial-gradient(circle, rgba(239,68,68,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: linear-gradient(to top, #060608, transparent);
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 900px;
+      padding: 0 24px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(239,68,68,0.06);
+      border: 1px solid rgba(239,68,68,0.12);
+      border-radius: 100px;
+      padding: 8px 20px;
+      margin-bottom: 40px;
+    }
+    .hero-badge-dot {
+      width: 6px;
+      height: 6px;
+      background: #ef4444;
+      border-radius: 50%;
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .hero-badge span { font-size: 13px; font-weight: 600; color: #ef4444; }
+    .hero h1 { margin-bottom: 16px; }
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px);
+      color: #6b6f82;
+      max-width: 650px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+    }
+    .hero-sub strong { color: #a0a4b4; font-weight: 500; }
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 80px;
+    }
+    .btn-primary {
+      background: #ef4444;
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary:hover {
+      background: #dc2626;
+      box-shadow: 0 12px 40px rgba(239,68,68,0.35);
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.04);
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.15);
+    }
+
+    /* Hero ECG */
+    .ecg-wrap { display: flex; justify-content: center; margin: 32px 0 24px; }
+    .ecg-line {
+      stroke-dasharray: 1200;
+      stroke-dashoffset: 1200;
+      animation: ecg-draw 3s ease-in-out forwards infinite;
+    }
+    @keyframes ecg-draw {
+      0% { stroke-dashoffset: 1200; }
+      60% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: 0; }
+    }
+
+    /* Hero stats */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .hero-stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+    .hero-stat-label { font-size: 13px; color: #5a5e70; }
+    @media (max-width: 600px) {
+      .hero-stats { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    }
+
+    /* ===== FEATURES ===== */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 900px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .features-grid { grid-template-columns: 1fr; } }
+
+    .feature-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.3s;
+    }
+    .feature-card:hover {
+      border-color: rgba(239,68,68,0.15);
+      background: rgba(255,255,255,0.03);
+      transform: translateY(-2px);
+    }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+    .feature-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+    .feature-card p { font-size: 14px; line-height: 1.7; color: #6b6f82; }
+
+    /* ===== STATS BAR ===== */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    @media (max-width: 768px) { .stats-bar { grid-template-columns: repeat(2, 1fr); } }
+    .stat-card {
+      text-align: center;
+      padding: 40px 24px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 16px;
+    }
+    .stat-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+    .stat-label { font-size: 15px; font-weight: 500; color: #a0a4b4; margin-bottom: 4px; }
+    .stat-desc { font-size: 13px; color: #5a5e70; }
+
+    /* ===== HOW IT WORKS (VIDEO) ===== */
+    .video-section { background: rgba(255,255,255,0.01); }
+    .video-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    @media (max-width: 900px) {
+      .video-layout { grid-template-columns: 1fr; gap: 40px; }
+    }
+    .video-wrap {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      background: #0a0a0e;
+    }
+    .video-wrap video {
+      width: 100%;
+      display: block;
+    }
+    .video-info h2 { margin-bottom: 24px; }
+    .video-info p { margin-bottom: 32px; }
+    .steps-list { list-style: none; display: flex; flex-direction: column; gap: 20px; }
+    .step-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: #ef4444;
+      flex-shrink: 0;
+    }
+    .step-text h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+    .step-text p { font-size: 13px; color: #5a5e70; }
+
+    /* ===== PIPELINE ===== */
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      position: relative;
+    }
+    @media (max-width: 768px) {
+      .pipeline { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 500px) {
+      .pipeline { grid-template-columns: 1fr; }
+    }
+    .pipeline-step {
+      text-align: center;
+      padding: 32px 20px;
+      position: relative;
+    }
+    .pipeline-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 26px;
+      transition: all 0.3s;
+    }
+    .pipeline-step:hover .pipeline-icon {
+      border-color: rgba(239,68,68,0.3);
+      box-shadow: 0 0 30px rgba(239,68,68,0.1);
+    }
+    .pipeline-num {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #ef4444;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pipeline-step h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .pipeline-step p { font-size: 13px; color: #5a5e70; line-height: 1.6; }
+    .pipeline-connector {
+      display: none; /* hidden on mobile */
+    }
+
+    /* ===== MEASUREMENTS ===== */
+    .meas-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 900px) { .meas-grid { grid-template-columns: 1fr; } }
+    .meas-card {
+      background: rgba(255,255,255,0.02);
+      border-radius: 16px;
+      padding: 32px;
+      border-left: 3px solid;
+    }
+    .meas-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .meas-item {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .meas-item:last-child { border-bottom: none; }
+    .meas-name {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: #d0d4e0;
+    }
+    .meas-desc { font-size: 12px; color: #5a5e70; margin-top: 2px; }
+
+    /* Disease grid */
+    .disease-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 60px;
+    }
+    @media (max-width: 768px) { .disease-grid { grid-template-columns: repeat(2, 1fr); } }
+    .disease-card {
+      background: rgba(239,68,68,0.03);
+      border: 1px solid rgba(239,68,68,0.08);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .disease-card h4 { font-size: 14px; font-weight: 600; color: #d0d4e0; margin-bottom: 4px; }
+    .disease-card p { font-size: 12px; color: #5a5e70; }
+
+    /* ===== USE CASES ===== */
+    .cases-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 768px) { .cases-grid { grid-template-columns: 1fr; } }
+    .case-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 36px;
+      display: flex;
+      gap: 20px;
+      transition: all 0.3s;
+    }
+    .case-card:hover {
+      border-color: rgba(239,68,68,0.12);
+      transform: translateY(-2px);
+    }
+    .case-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: rgba(239,68,68,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .case-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .case-card p { font-size: 14px; color: #6b6f82; line-height: 1.6; margin-bottom: 16px; }
+    .case-stat {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #ef4444;
+    }
+    .case-stat-label { font-size: 13px; color: #5a5e70; margin-left: 8px; }
+
+    /* ===== COMPARISON ===== */
+    .comparison-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: rgba(255,255,255,0.02);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    .comparison-table th,
+    .comparison-table td {
+      padding: 16px 24px;
+      text-align: center;
+      font-size: 14px;
+    }
+    .comparison-table th {
+      background: rgba(255,255,255,0.03);
+      font-weight: 600;
+      color: #8b8fa3;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .comparison-table th:first-child { text-align: left; }
+    .comparison-table td:first-child {
+      text-align: left;
+      color: #c8ccd4;
+      font-weight: 500;
+    }
+    .comparison-table tr:not(:last-child) td {
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .comparison-table tr:hover td { background: rgba(255,255,255,0.01); }
+    .th-cordis { color: #ef4444 !important; font-weight: 700 !important; font-size: 15px !important; }
+    .check { color: #34d399; font-size: 18px; }
+    .cross { color: #4a4e5e; font-size: 18px; }
+    .partial { color: #fbbf24; font-size: 14px; }
+    .cell-text { color: #8b8fa3; font-size: 13px; font-weight: 500; }
+
+    /* ===== TECH ===== */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 900px) { .tech-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 500px) { .tech-grid { grid-template-columns: 1fr; } }
+    .tech-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 32px;
+    }
+    .tech-card-icon {
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+    .tech-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 16px;
+    }
+    .tech-card li {
+      font-size: 13px;
+      color: #6b6f82;
+      padding: 6px 0;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tech-card li::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(239,68,68,0.4);
+      flex-shrink: 0;
+    }
+
+    /* ===== DEMO FORM ===== */
+    .demo-section {
+      background: rgba(239,68,68,0.02);
+      border-top: 1px solid rgba(239,68,68,0.06);
+      border-bottom: 1px solid rgba(239,68,68,0.06);
+    }
+    .demo-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    @media (max-width: 900px) {
+      .demo-layout { grid-template-columns: 1fr; gap: 48px; }
+    }
+    .demo-info h2 { margin-bottom: 20px; }
+    .demo-info > p { margin-bottom: 36px; }
+    .demo-perks { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-bottom: 40px; }
+    .demo-perks li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: #a0a4b4;
+    }
+    .demo-perks li::before {
+      content: '✓';
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(239,68,68,0.08);
+      color: #ef4444;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .demo-contact {
+      padding: 24px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 12px;
+    }
+    .demo-contact a {
+      color: #ef4444;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .demo-contact a:hover { color: #f87171; }
+
+    .demo-form {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 20px;
+      padding: 40px;
+    }
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #6b6f82;
+      margin-bottom: 8px;
+    }
+    .form-input {
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: #ffffff;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+      outline: none;
+    }
+    .form-input:focus {
+      border-color: rgba(239,68,68,0.3);
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.08);
+    }
+    .form-input::placeholder { color: #3a3e4e; }
+    textarea.form-input { resize: none; min-height: 80px; }
+    .form-submit {
+      width: 100%;
+      background: #ef4444;
+      color: #fff;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Inter', sans-serif;
+    }
+    .form-submit:hover {
+      background: #dc2626;
+      box-shadow: 0 8px 30px rgba(239,68,68,0.3);
+    }
+    .form-success {
+      text-align: center;
+      padding: 60px 24px;
+      display: none;
+    }
+    .form-success.show { display: block; }
+    .form-success-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(52,211,153,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 28px;
+    }
+    .form-success h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 12px;
+    }
+    .form-success p { color: #6b6f82; font-size: 15px; }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      border-top: 1px solid rgba(255,255,255,0.04);
+      padding: 60px 0 40px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+    }
+    .footer-brand p { font-size: 14px; color: #5a5e70; line-height: 1.7; margin: 12px 0; max-width: 400px; }
+    .footer-made { font-size: 13px; color: #3a3e4e; }
+    .footer h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 16px;
+    }
+    .footer ul { list-style: none; }
+    .footer li { margin-bottom: 10px; }
+    .footer li a { font-size: 14px; color: #5a5e70; transition: color 0.2s; }
+    .footer li a:hover { color: #ffffff; }
+    .footer-bottom {
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-bottom p { font-size: 13px; color: #3a3e4e; }
+    .footer-bottom-links { display: flex; gap: 24px; }
+    .footer-bottom-links a { font-size: 13px; color: #3a3e4e; transition: color 0.2s; }
+    .footer-bottom-links a:hover { color: #6b6f82; }
+
+    /* ===== DIVIDER ===== */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+      margin: 0;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up-delay-1 { transition-delay: 0.1s; }
+    .fade-up-delay-2 { transition-delay: 0.2s; }
+    .fade-up-delay-3 { transition-delay: 0.3s; }
+    .fade-up-delay-4 { transition-delay: 0.4s; }
+    .fade-up-delay-5 { transition-delay: 0.5s; }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="#" class="logo">
+        <span class="logo-white">CORDIS</span><span class="logo-red">AI</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#measurements">Measurements</a></li>
+        <li><a href="#comparison">Comparison</a></li>
+        <li><a href="#demo" class="nav-cta">Request Demo</a></li>
+      </ul>
+      <button class="mobile-toggle" onclick="toggleMobile()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#features" onclick="closeMobile()">Features</a>
+      <a href="#how-it-works" onclick="closeMobile()">How It Works</a>
+      <a href="#measurements" onclick="closeMobile()">Measurements</a>
+      <a href="#comparison" onclick="closeMobile()">Comparison</a>
+      <a href="#demo" onclick="closeMobile()" class="nav-cta" style="text-align:center; margin-top:8px;">Request Demo</a>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <div class="hero-grid"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge fade-up">
+        <div class="hero-badge-dot"></div>
+        <span>AI-Powered Cardiac Analysis</span>
+      </div>
+      <h1 class="heading-xl fade-up fade-up-delay-1">
+        Automated<br/>
+        <span class="gradient-text">Echocardiography</span><br/>
+        Analysis
+      </h1>
+      <div class="ecg-wrap fade-up fade-up-delay-2">
+        <svg width="400" height="60" viewBox="0 0 400 60" style="opacity:0.5">
+          <defs>
+            <linearGradient id="ecgG" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ef4444" stop-opacity="0"/>
+              <stop offset="25%" stop-color="#ef4444" stop-opacity="1"/>
+              <stop offset="75%" stop-color="#ef4444" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#ef4444" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path class="ecg-line" d="M0,30 L50,30 L55,30 L60,18 L65,30 L90,30 L95,30 L98,10 L101,50 L104,5 L107,38 L110,28 L115,30 L160,30 L165,30 L170,18 L175,30 L200,30 L205,30 L208,10 L211,50 L214,5 L217,38 L220,28 L225,30 L270,30 L275,30 L280,18 L285,30 L310,30 L315,30 L318,10 L321,50 L324,5 L327,38 L330,28 L335,30 L400,30" fill="none" stroke="url(#ecgG)" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <p class="hero-sub fade-up fade-up-delay-3">
+        CordisAI transforms echocardiographic imaging into actionable clinical insights.
+        <strong>25+ measurements. 7+ disease detections. AI-powered recommendations.</strong>
+        All in under 30 seconds.
+      </p>
+      <div class="hero-ctas fade-up fade-up-delay-4">
+        <a href="#demo" class="btn-primary">
+          Request a Demo
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#how-it-works" class="btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          See How It Works
+        </a>
+      </div>
+      <div class="hero-stats fade-up fade-up-delay-5">
+        <div>
+          <div class="hero-stat-value">25+</div>
+          <div class="hero-stat-label">Cardiac Measurements</div>
+        </div>
+        <div>
+          <div class="hero-stat-value">7+</div>
+          <div class="hero-stat-label">Disease Detections</div>
+        </div>
+        <div>
+          <div class="hero-stat-value">&lt;30s</div>
+          <div class="hero-stat-label">Analysis Time</div>
+        </div>
+        <div>
+          <div class="hero-stat-value">91.5%</div>
+          <div class="hero-stat-label">Segmentation Dice</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== FEATURES ===== -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header text-center fade-up">
+        <span class="label">Capabilities</span>
+        <h2 class="heading-lg">Complete Cardiac Analysis Platform</h2>
+        <p class="subtitle">From raw echocardiographic video to clinical decision support — fully automated, clinically validated.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card fade-up">
+          <div class="feature-icon" style="background:rgba(239,68,68,0.06)">❤️</div>
+          <h3>LV Segmentation</h3>
+          <p>Deep learning U-Net segments left ventricle, myocardium, and left atrium with 91.5% Dice accuracy on validation data.</p>
+        </div>
+        <div class="feature-card fade-up fade-up-delay-1">
+          <div class="feature-icon" style="background:rgba(59,130,246,0.06)">📊</div>
+          <h3>25+ Cardiac Measurements</h3>
+          <p>LVEF, volumes, wall thickness, LV mass, GLS, LA volume, cardiac output — all ASE-guideline compliant with sex-specific norms.</p>
+        </div>
+        <div class="feature-card fade-up fade-up-delay-2">
+          <div class="feature-icon" style="background:rgba(168,85,247,0.06)">🧠</div>
+          <h3>AI Disease Detection</h3>
+          <p>7+ conditions detected: HFrEF, LV hypertrophy, dilatation, LA enlargement, amyloidosis suspicion, diastolic dysfunction, and more.</p>
+        </div>
+        <div class="feature-card fade-up">
+          <div class="feature-icon" style="background:rgba(16,185,129,0.06)">🩺</div>
+          <h3>Clinical Recommendations</h3>
+          <p>Context-specific guidance: GDMT initiation, imaging referrals, screening protocols — reducing cognitive load for clinicians.</p>
+        </div>
+        <div class="feature-card fade-up fade-up-delay-1">
+          <div class="feature-icon" style="background:rgba(245,158,11,0.06)">📄</div>
+          <h3>Multi-Format Reports</h3>
+          <p>Export to PDF, FHIR R4 bundles, and DICOM Structured Reports. PACS and EHR ready out of the box with LOINC coding.</p>
+        </div>
+        <div class="feature-card fade-up fade-up-delay-2">
+          <div class="feature-icon" style="background:rgba(6,182,212,0.06)">🛡️</div>
+          <h3>Gender-Specific Norms</h3>
+          <p>ASE 2015 sex-specific reference ranges for all parameters. Accurate abnormality flagging for male and female patients.</p>
+        </div>
+        <div class="feature-card fade-up">
+          <div class="feature-icon" style="background:rgba(234,179,8,0.06)">⚡</div>
+          <h3>Real-Time Processing</h3>
+          <p>GPU-accelerated analysis completes in under 30 seconds. Supports AVI, DICOM, and NIfTI input formats natively.</p>
+        </div>
+        <div class="feature-card fade-up fade-up-delay-1">
+          <div class="feature-icon" style="background:rgba(236,72,153,0.06)">📐</div>
+          <h3>Simpson Biplane Method</h3>
+          <p>Gold-standard 20-disk modified Simpson method for volume calculations. Clinically validated methodology used worldwide.</p>
+        </div>
+        <div class="feature-card fade-up fade-up-delay-2">
+          <div class="feature-icon" style="background:rgba(99,102,241,0.06)">🌍</div>
+          <h3>Central Asia Focus</h3>
+          <p>First AI echo platform designed for Central Asia and CIS markets. Local language support and healthcare system integration.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== STATS ===== -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="stats-bar">
+        <div class="stat-card fade-up">
+          <div class="stat-number" data-target="25" data-suffix="+">0</div>
+          <div class="stat-label">Clinical Parameters</div>
+          <div class="stat-desc">Comprehensive assessment</div>
+        </div>
+        <div class="stat-card fade-up fade-up-delay-1">
+          <div class="stat-number" data-target="91.5" data-suffix="%" data-decimals="1">0</div>
+          <div class="stat-label">Segmentation Accuracy</div>
+          <div class="stat-desc">Dice score validation</div>
+        </div>
+        <div class="stat-card fade-up fade-up-delay-2">
+          <div class="stat-number" data-target="7" data-suffix="+">0</div>
+          <div class="stat-label">Disease Detections</div>
+          <div class="stat-desc">With AI recommendations</div>
+        </div>
+        <div class="stat-card fade-up fade-up-delay-3">
+          <div class="stat-number" data-target="30" data-prefix="<" data-suffix="s">0</div>
+          <div class="stat-label">Analysis Time</div>
+          <div class="stat-desc">Full pipeline execution</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== HOW IT WORKS — VIDEO ===== -->
+  <section class="section video-section" id="how-it-works">
+    <div class="container">
+      <div class="section-header text-center fade-up">
+        <span class="label">How It Works</span>
+        <h2 class="heading-lg">See CordisAI in Action</h2>
+        <p class="subtitle">Watch the full analysis pipeline — from echo upload to clinical report</p>
+      </div>
+      <div class="video-layout">
+        <div class="video-wrap fade-up">
+          <video controls preload="metadata" poster="">
+            <source src="mvp.MOV" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="video-info fade-up fade-up-delay-2">
+          <h2 class="heading-md">From Upload to Report<br/>in 4 Steps</h2>
+          <p class="text-lg" style="color:#6b6f82">Our AI pipeline processes echocardiographic video automatically, delivering clinically actionable results.</p>
+          <ul class="steps-list">
+            <li class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-text">
+                <h4>Upload Echo Video</h4>
+                <p>Drag & drop AVI, DICOM, or NIfTI files. PACS integration available.</p>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-text">
+                <h4>AI Segmentation</h4>
+                <p>U-Net identifies LV, myocardium, and LA in every frame of the cardiac cycle.</p>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-text">
+                <h4>Measurements & Detection</h4>
+                <p>25+ parameters calculated. 7+ diseases screened with clinical guidance.</p>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">4</div>
+              <div class="step-text">
+                <h4>Export Report</h4>
+                <p>PDF, FHIR R4, or DICOM SR — ready for EHR and clinical review.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== PIPELINE STEPS ===== -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="pipeline">
+        <div class="pipeline-step fade-up">
+          <div class="pipeline-num">1</div>
+          <div class="pipeline-icon">📤</div>
+          <h3>Upload</h3>
+          <p>Echo video in AVI, DICOM, or NIfTI. Drag-and-drop or PACS integration.</p>
+        </div>
+        <div class="pipeline-step fade-up fade-up-delay-1">
+          <div class="pipeline-num">2</div>
+          <div class="pipeline-icon">🔬</div>
+          <h3>AI Analysis</h3>
+          <p>Deep learning segments cardiac structures frame-by-frame on GPU.</p>
+        </div>
+        <div class="pipeline-step fade-up fade-up-delay-2">
+          <div class="pipeline-num">3</div>
+          <div class="pipeline-icon">📊</div>
+          <h3>Measure & Detect</h3>
+          <p>25+ clinical parameters. 7+ disease conditions with recommendations.</p>
+        </div>
+        <div class="pipeline-step fade-up fade-up-delay-3">
+          <div class="pipeline-num">4</div>
+          <div class="pipeline-icon">📋</div>
+          <h3>Report</h3>
+          <p>PDF, FHIR R4, DICOM SR — LOINC-coded, SNOMED-CT classified.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== MEASUREMENTS ===== -->
+  <section class="section" id="measurements">
+    <div class="container">
+      <div class="section-header text-center fade-up">
+        <span class="label">Measurements</span>
+        <h2 class="heading-lg">25+ Clinical Parameters</h2>
+        <p class="subtitle">Comprehensive cardiac assessment following ASE 2015 guidelines with sex-specific reference ranges.</p>
+      </div>
+      <div class="meas-grid">
+        <div class="meas-card fade-up" style="border-color:rgba(239,68,68,0.3)">
+          <h3 style="color:#ef4444">LV Systolic Function</h3>
+          <div class="meas-item"><div class="meas-name">LVEF</div><div class="meas-desc">Ejection Fraction — Simpson biplane (MOD)</div></div>
+          <div class="meas-item"><div class="meas-name">LVEDV / LVESV</div><div class="meas-desc">End-diastolic / End-systolic Volume</div></div>
+          <div class="meas-item"><div class="meas-name">LVSV</div><div class="meas-desc">Stroke Volume — LVEDV - LVESV</div></div>
+          <div class="meas-item"><div class="meas-name">LVEDVi / LVESVi</div><div class="meas-desc">Indexed Volumes — Volume / BSA</div></div>
+          <div class="meas-item"><div class="meas-name">GLS</div><div class="meas-desc">Global Longitudinal Strain</div></div>
+          <div class="meas-item"><div class="meas-name">CO</div><div class="meas-desc">Cardiac Output — SV × HR</div></div>
+        </div>
+        <div class="meas-card fade-up fade-up-delay-1" style="border-color:rgba(59,130,246,0.3)">
+          <h3 style="color:#60a5fa">LV Dimensions & Mass</h3>
+          <div class="meas-item"><div class="meas-name">IVSd / LVPWd</div><div class="meas-desc">Wall Thickness — myocardial pixel analysis</div></div>
+          <div class="meas-item"><div class="meas-name">LVIDd / LVIDs</div><div class="meas-desc">Internal Diameter at ED/ES</div></div>
+          <div class="meas-item"><div class="meas-name">LVIDd_i / LVIDs_i</div><div class="meas-desc">Indexed Diameters — / BSA</div></div>
+          <div class="meas-item"><div class="meas-name">RWT</div><div class="meas-desc">Relative Wall Thickness</div></div>
+          <div class="meas-item"><div class="meas-name">LVM / LVMi</div><div class="meas-desc">LV Mass & Index — ASE cubed formula</div></div>
+        </div>
+        <div class="meas-card fade-up fade-up-delay-2" style="border-color:rgba(168,85,247,0.3)">
+          <h3 style="color:#a78bfa">Left Atrium & Other</h3>
+          <div class="meas-item"><div class="meas-name">LA Area</div><div class="meas-desc">Left Atrial Area — mask planimetry</div></div>
+          <div class="meas-item"><div class="meas-name">LAV / LAVi</div><div class="meas-desc">LA Volume & Index — 20-disk summation</div></div>
+          <div class="meas-item"><div class="meas-name">BSA</div><div class="meas-desc">Body Surface Area — Mosteller formula</div></div>
+          <div class="meas-item"><div class="meas-name">EF Category</div><div class="meas-desc">Normal / HFmrEF / HFrEF classification</div></div>
+          <div class="meas-item"><div class="meas-name">LV Geometry</div><div class="meas-desc">Normal / Concentric / Eccentric patterns</div></div>
+          <div class="meas-item"><div class="meas-name">GLS Category</div><div class="meas-desc">5-level strain classification</div></div>
+        </div>
+      </div>
+
+      <!-- Disease detection cards -->
+      <div class="fade-up" style="margin-top:80px; text-align:center;">
+        <span class="label">Disease Detection</span>
+        <h3 class="heading-md" style="margin-bottom:32px;">7+ Conditions with AI Recommendations</h3>
+      </div>
+      <div class="disease-grid">
+        <div class="disease-card fade-up">
+          <h4>Heart Failure</h4>
+          <p>HFrEF / HFmrEF classification with GDMT guidance</p>
+        </div>
+        <div class="disease-card fade-up fade-up-delay-1">
+          <h4>LV Hypertrophy</h4>
+          <p>Concentric / Eccentric pattern identification</p>
+        </div>
+        <div class="disease-card fade-up fade-up-delay-1">
+          <h4>LV Dilatation</h4>
+          <p>Sex-specific diameter thresholds</p>
+        </div>
+        <div class="disease-card fade-up fade-up-delay-2">
+          <h4>LA Enlargement</h4>
+          <p>Volume, area, and index criteria</p>
+        </div>
+        <div class="disease-card fade-up fade-up-delay-2">
+          <h4>Amyloidosis</h4>
+          <p>Multi-factor suspicion scoring system</p>
+        </div>
+        <div class="disease-card fade-up fade-up-delay-3">
+          <h4>Diastolic Dysfunction</h4>
+          <p>Risk factor aggregation analysis</p>
+        </div>
+        <div class="disease-card fade-up fade-up-delay-3">
+          <h4>Valvular Disease</h4>
+          <p>Structural pattern analysis & referral</p>
+        </div>
+        <div class="disease-card fade-up fade-up-delay-4" style="background:rgba(16,185,129,0.03); border-color:rgba(16,185,129,0.08);">
+          <h4 style="color:#34d399">+ More Coming</h4>
+          <p>RV function, TAPSE, diastolic params</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== USE CASES ===== -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header text-center fade-up">
+        <span class="label">Use Cases</span>
+        <h2 class="heading-lg">Built for Real-World Impact</h2>
+        <p class="subtitle">From tertiary hospitals to rural clinics — CordisAI adapts to your workflow.</p>
+      </div>
+      <div class="cases-grid">
+        <div class="case-card fade-up">
+          <div class="case-icon">🏥</div>
+          <div>
+            <h3>Hospitals & Clinics</h3>
+            <p>Reduce echo reporting time by 80%. Standardize measurements across operators. Auto-generate structured reports for EHR integration.</p>
+            <span class="case-stat">80%</span><span class="case-stat-label">time saved per study</span>
+          </div>
+        </div>
+        <div class="case-card fade-up fade-up-delay-1">
+          <div class="case-icon">🌐</div>
+          <div>
+            <h3>Remote & Rural Areas</h3>
+            <p>Enable AI-assisted echo analysis where cardiologists are unavailable. On-premise deployment with no internet dependency required.</p>
+            <span class="case-stat">24/7</span><span class="case-stat-label">availability</span>
+          </div>
+        </div>
+        <div class="case-card fade-up">
+          <div class="case-icon">🎓</div>
+          <div>
+            <h3>Medical Education</h3>
+            <p>Training tool for sonographers and cardiology fellows. Instant feedback on measurements with ASE guideline references.</p>
+            <span class="case-stat">25+</span><span class="case-stat-label">parameters demonstrated</span>
+          </div>
+        </div>
+        <div class="case-card fade-up fade-up-delay-1">
+          <div class="case-icon">🔬</div>
+          <div>
+            <h3>Clinical Research</h3>
+            <p>Batch processing for large echo studies. FHIR R4 and DICOM SR exports enable seamless research data pipeline integration.</p>
+            <span class="case-stat">FHIR</span><span class="case-stat-label">R4 compatible</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== COMPARISON ===== -->
+  <section class="section" id="comparison">
+    <div class="container" style="max-width:960px">
+      <div class="section-header text-center fade-up">
+        <span class="label">Comparison</span>
+        <h2 class="heading-lg">How We Compare</h2>
+        <p class="subtitle">CordisAI vs. market leader us2.ai vs. traditional manual analysis.</p>
+      </div>
+      <div class="fade-up">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th style="text-align:left">Feature</th>
+              <th class="th-cordis">CordisAI</th>
+              <th>us2.ai</th>
+              <th>Manual</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>AI LV Segmentation</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td></tr>
+            <tr><td>LVEF (Simpson Biplane)</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+            <tr><td>GLS (Strain Analysis)</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="partial">~</span></td></tr>
+            <tr><td>LV Mass & Index</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+            <tr><td>LA Volume Index</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+            <tr><td>Disease Detection (7+)</td><td><span class="check">✓</span></td><td><span class="partial">~</span></td><td><span class="cross">✗</span></td></tr>
+            <tr><td>Clinical Recommendations</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+            <tr><td>FHIR R4 Export</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td></tr>
+            <tr><td>DICOM SR Export</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td></tr>
+            <tr><td>Sex-Specific Norms</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="partial">~</span></td></tr>
+            <tr><td>Analysis Time</td><td><span class="cell-text">&lt;30s</span></td><td><span class="cell-text">~1 min</span></td><td><span class="cell-text">15–30 min</span></td></tr>
+            <tr><td>Central Asia / CIS Focus</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+            <tr><td>On-Premise Deployment</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cell-text">N/A</span></td></tr>
+            <tr><td>Open Architecture</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cell-text">N/A</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== TECH STACK ===== -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header text-center fade-up">
+        <span class="label">Technology</span>
+        <h2 class="heading-lg">Enterprise-Grade Infrastructure</h2>
+        <p class="subtitle">Built on proven technologies with healthcare interoperability standards.</p>
+      </div>
+      <div class="tech-grid">
+        <div class="tech-card fade-up">
+          <div class="tech-card-icon">🖥️</div>
+          <h3>Architecture</h3>
+          <ul>
+            <li>FastAPI REST Backend</li>
+            <li>React 18 Frontend</li>
+            <li>PyTorch Deep Learning</li>
+            <li>GPU-Accelerated Inference</li>
+          </ul>
+        </div>
+        <div class="tech-card fade-up fade-up-delay-1">
+          <div class="tech-card-icon">🔗</div>
+          <h3>Standards</h3>
+          <ul>
+            <li>FHIR R4 (HL7)</li>
+            <li>DICOM SR (TID 5200)</li>
+            <li>LOINC & SNOMED-CT</li>
+            <li>DICOMweb / PACS</li>
+          </ul>
+        </div>
+        <div class="tech-card fade-up fade-up-delay-2">
+          <div class="tech-card-icon">🔒</div>
+          <h3>Security</h3>
+          <ul>
+            <li>On-Premise Deployment</li>
+            <li>Data Never Leaves Facility</li>
+            <li>Role-Based Access</li>
+            <li>Full Audit Trail</li>
+          </ul>
+        </div>
+        <div class="tech-card fade-up fade-up-delay-3">
+          <div class="tech-card-icon">☁️</div>
+          <h3>Deployment</h3>
+          <ul>
+            <li>Docker Containerized</li>
+            <li>Kubernetes Ready</li>
+            <li>AWS HealthLake</li>
+            <li>Air-Gapped Networks</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== DEMO FORM ===== -->
+  <section class="section demo-section" id="demo">
+    <div class="container">
+      <div class="demo-layout">
+        <div class="demo-info fade-up">
+          <span class="label">Get Started</span>
+          <h2 class="heading-lg">Request a Demo</h2>
+          <p class="text-lg" style="color:#6b6f82">See CordisAI in action with your own echo data. Our team will walk you through the platform and discuss integration with your existing workflow.</p>
+          <ul class="demo-perks">
+            <li>Live demo with real echocardiographic analysis</li>
+            <li>Custom deployment options (cloud / on-premise)</li>
+            <li>PACS and EHR integration planning</li>
+            <li>Volume pricing for your institution</li>
+          </ul>
+          <div class="demo-contact">
+            <div class="text-sm" style="margin-bottom:8px">Contact us directly</div>
+            <a href="mailto:demo@cordisai.com">demo@cordisai.com</a>
+          </div>
+        </div>
+        <div class="fade-up fade-up-delay-2">
+          <form class="demo-form" id="demoForm" onsubmit="handleDemoSubmit(event)">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" class="form-input" placeholder="Dr. Jane Smith" required />
+            </div>
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="email" class="form-input" placeholder="jane@hospital.org" required />
+            </div>
+            <div class="form-group">
+              <label>Organization</label>
+              <input type="text" class="form-input" placeholder="City Hospital" />
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input type="tel" class="form-input" placeholder="+7 (777) 123-4567" />
+            </div>
+            <div class="form-group">
+              <label>Message</label>
+              <textarea class="form-input" placeholder="Tell us about your use case..." rows="3"></textarea>
+            </div>
+            <button type="submit" class="form-submit">Request Demo →</button>
+          </form>
+          <div class="demo-form form-success" id="demoSuccess">
+            <div class="form-success-icon">✓</div>
+            <h3>Thank You!</h3>
+            <p>We've received your request. Our team will contact you within 24 hours to schedule your personalized demo.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="font-size:24px">
+            <span class="logo-white">CORDIS</span><span class="logo-red">AI</span>
+          </div>
+          <p>AI-powered echocardiography analysis platform. Transforming cardiac imaging with deep learning for faster, more accurate clinical decisions.</p>
+          <div class="footer-made">Made with ❤️ in Central Asia</div>
+        </div>
+        <div>
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#measurements">Measurements</a></li>
+            <li><a href="#comparison">Comparison</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="mailto:info@cordisai.com">info@cordisai.com</a></li>
+            <li><a href="mailto:demo@cordisai.com">demo@cordisai.com</a></li>
+            <li style="margin-top:12px"><a href="#demo" style="background:rgba(239,68,68,0.06); padding:8px 16px; border-radius:8px; color:#ef4444; font-weight:600; display:inline-block;">Request Demo</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 CordisAI. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Compliance</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ===== Navbar scroll effect =====
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
+    });
+
+    // ===== Mobile menu =====
+    function toggleMobile() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+    function closeMobile() {
+      document.getElementById('mobileMenu').classList.remove('open');
+    }
+
+    // ===== Scroll animations =====
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ===== Counter animation =====
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.dataset.animated) {
+          entry.target.dataset.animated = 'true';
+          const target = parseFloat(entry.target.dataset.target);
+          const suffix = entry.target.dataset.suffix || '';
+          const prefix = entry.target.dataset.prefix || '';
+          const decimals = parseInt(entry.target.dataset.decimals || '0');
+          const duration = 2000;
+          const start = Date.now();
+
+          function tick() {
+            const elapsed = Date.now() - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = eased * target;
+            entry.target.textContent = prefix + (decimals > 0 ? current.toFixed(decimals) : Math.round(current)) + suffix;
+            if (progress < 1) requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.stat-number').forEach(el => counterObserver.observe(el));
+
+    // ===== Demo form =====
+    function handleDemoSubmit(e) {
+      e.preventDefault();
+      document.getElementById('demoForm').style.display = 'none';
+      const success = document.getElementById('demoSuccess');
+      success.classList.add('show');
+      success.style.display = 'block';
+    }
+
+    // ===== Smooth scroll for anchor links =====
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

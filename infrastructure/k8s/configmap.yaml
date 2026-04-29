@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: heartai-config
+  namespace: heartai
+  labels:
+    app.kubernetes.io/name: heartai
+data:
+  # Override config.py defaults via environment variables
+  DEVICE: "cpu"                   # use "cuda" with GPU node pool
+  IMG_SIZE: "112"
+  REPORTS_DIR: "/data/reports"
+  CHECKPOINTS_DIR: "/data/checkpoints"

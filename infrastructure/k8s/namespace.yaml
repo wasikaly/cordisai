@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: heartai
+  labels:
+    app.kubernetes.io/name: heartai
+    app.kubernetes.io/part-of: heartai
